@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  /* Japanese Zen Color Palette */
+  --color-washi-bg: #f7f6f2; /* Soft off-white */
+  --color-surface: #ffffff;
+  --color-ink-primary: #2d2a26; /* Very dark charcoal, almost black */
+  --color-ink-secondary: #7a7571; /* Muted stone grey */
+  --color-matcha-accent: #7e8d69; /* Muted, elegant green */
+  --color-matcha-hover: #6a7758;
+  --color-bamboo: #d1c7b1; /* Warm wood tone */
+  --color-bamboo-light: #e6dfcc;
+  --color-danger: #b35a5a; /* Muted red */
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', serif; /* For elegant titles */
+  
+  /* Borders and Shadows */
+  --radius-soft: 8px;
+  --radius-round: 50px;
+  --shadow-subtle: 0 4px 20px rgba(45, 42, 38, 0.05);
+  --shadow-float: 0 10px 30px rgba(45, 42, 38, 0.08);
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-washi-bg);
+  color: var(--color-ink-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  color: var(--color-ink-primary);
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--color-matcha-accent);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+a:hover {
+  color: var(--color-matcha-hover);
+}
+
+/* Base Form Elements */
+input, textarea, button, select {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Utility Classes */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.zen-card {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-soft);
+  box-shadow: var(--shadow-subtle);
+  padding: 2rem;
+  transition: var(--transition-smooth);
+}
+
+.zen-card:hover {
+  box-shadow: var(--shadow-float);
+  transform: translateY(-2px);
+}
+
+.zen-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-matcha-accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-round);
+  font-weight: 500;
+  transition: var(--transition-smooth);
+  box-shadow: 0 2px 10px rgba(126, 141, 105, 0.2);
+}
+
+.zen-button:hover {
+  background-color: var(--color-matcha-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(126, 141, 105, 0.3);
+}
+
+.zen-button.outline {
+  background-color: transparent;
+  color: var(--color-matcha-accent);
+  border: 1px solid var(--color-matcha-accent);
+  box-shadow: none;
+}
+
+.zen-button.outline:hover {
+  background-color: var(--color-matcha-accent);
+  color: white;
+}
+
+.zen-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-bamboo-light);
+  border-radius: var(--radius-soft);
+  background-color: transparent;
+  color: var(--color-ink-primary);
+  transition: var(--transition-smooth);
+}
+
+.zen-input:focus {
+  outline: none;
+  border-color: var(--color-matcha-accent);
+  box-shadow: 0 0 0 3px rgba(126, 141, 105, 0.1);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-washi-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bamboo);
+  border-radius: var(--radius-soft);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-matcha-accent);
+}
