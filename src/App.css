@@ -63,3 +63,85 @@
   font-size: 0.875rem;
   border-top: 1px solid var(--color-bamboo-light);
 }
+
+/* Layout Utilities for Responsive Design */
+.add-recipe-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+.recipe-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+}
+
+.recipe-details-content {
+  padding: 3rem;
+}
+
+.pantry-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.knowledge-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .add-recipe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-panel {
+    position: static !important;
+    margin-top: 2rem;
+  }
+
+  .recipe-details-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .recipe-details-content {
+    padding: 1.5rem;
+  }
+
+  .pantry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .knowledge-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .knowledge-item > div:last-child {
+    text-align: left !important;
+    width: 100%;
+  }
+
+  .knowledge-item .tag-container {
+    justify-content: flex-start !important;
+  }
+}

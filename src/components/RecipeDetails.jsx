@@ -83,7 +83,7 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
           </div>
         )}
         
-        <div style={{ padding: '3rem' }}>
+        <div className="recipe-details-content">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h1 style={{ fontSize: '2.5rem', margin: '0 0 2rem 0' }}>{recipe.title}</h1>
             <button 
@@ -95,7 +95,7 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '4rem' }}>
+          <div className="recipe-details-grid">
             <div>
               <h3 style={{ borderBottom: '1px solid var(--color-bamboo-light)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
                 Ingredients

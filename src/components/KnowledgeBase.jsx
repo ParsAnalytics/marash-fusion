@@ -94,7 +94,7 @@ export default function KnowledgeBase() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {documents.map(doc => (
-            <div key={doc.id} className="zen-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem' }}>
+            <div key={doc.id} className="zen-card knowledge-item">
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <div style={{ padding: '1rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
                   <FileText size={24} color="var(--color-bamboo)" />
@@ -106,7 +106,7 @@ export default function KnowledgeBase() {
               </div>
               
               <div style={{ textAlign: 'right' }}>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div className="tag-container" style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                   {doc.extractedProfile.map((tag, idx) => (
                     <span key={idx} style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', backgroundColor: 'var(--color-matcha-accent)', color: 'white', borderRadius: '4px' }}>
                       {tag}

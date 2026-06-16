@@ -88,7 +88,7 @@ export default function PantryScanner({ onRecipeAdded }) {
       )}
 
       {photo && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+        <div className="pantry-grid">
           <div className="zen-card" style={{ padding: '0', overflow: 'hidden' }}>
              <div 
               style={{ 

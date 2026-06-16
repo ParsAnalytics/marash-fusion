@@ -90,7 +90,7 @@ export default function AddRecipe({ onRecipeAdded }) {
   };
 
   return (
-    <div className="add-recipe-container" style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
+    <div className="add-recipe-grid">
       <form onSubmit={handleSubmit} className="zen-card">
         <div style={{ marginBottom: '1.5rem' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Title</label>

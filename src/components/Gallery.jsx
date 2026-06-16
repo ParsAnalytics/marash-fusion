@@ -55,7 +55,7 @@ export default function Gallery({ onViewRecipe }) {
           <p>No recipes found matching "{searchTerm}"</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(250px, 100%), 1fr))', gap: '2rem' }}>
           {filteredRecipes.map(recipe => (
             <div 
               key={recipe.id} 
