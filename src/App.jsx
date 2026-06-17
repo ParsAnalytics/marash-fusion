@@ -86,7 +86,7 @@ function App() {
 
       <footer className="app-footer">
         <div className="container">
-          <p>Marash Fusion &copy; {new Date().getFullYear()}. Crafted with minimalist Zen philosophy.</p>
+          <p>Marash Fusion &copy; {new Date().getFullYear()}</p>
         </div>
       </footer>
     </div>

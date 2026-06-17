@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Plus, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Image as ImageIcon, ScanText, Sparkles, Camera } from 'lucide-react';
 import { recipeStore } from '../store/recipeStore';
+import { aiService } from '../services/aiService';
 
 export default function AddRecipe({ onRecipeAdded }) {
   const [title, setTitle] = useState('');
@@ -8,7 +9,38 @@ export default function AddRecipe({ onRecipeAdded }) {
   const [instructions, setInstructions] = useState('');
   const [photos, setPhotos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const fileInputRef = useRef(null);
+  const scanInputRef = useRef(null);
+
+  const handleScanUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      setIsScanning(true);
+      try {
+        const result = await aiService.extractRecipeFromImage(reader.result);
+        if (result.title) setTitle(result.title);
+        if (result.ingredients && result.ingredients.length > 0) {
+          setIngredients(result.ingredients);
+        }
+        if (result.instructions) setInstructions(result.instructions);
+        
+        // Save the scanned document as the first photo
+        setPhotos(prev => [reader.result, ...prev]);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to read the recipe. Make sure the text is clear.');
+      } finally {
+        setIsScanning(false);
+        // Reset input so they can scan another one if needed
+        if (scanInputRef.current) scanInputRef.current.value = '';
+      }
+    };
+    reader.readAsDataURL(file);
+  };
   const handleIngredientChange = (index, field, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index][field] = value;
@@ -64,6 +96,37 @@ export default function AddRecipe({ onRecipeAdded }) {
 
   return (
     <div>
+      <div className="zen-card" style={{ maxWidth: '800px', margin: '0 auto 2rem', backgroundColor: 'rgba(126, 141, 105, 0.05)', border: '1px solid var(--color-matcha-accent)' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-matcha-accent)', marginBottom: '0.5rem' }}>
+          <ScanText size={20} /> Auto-Fill from Photo
+        </h3>
+        <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-secondary)', marginBottom: '1.5rem' }}>
+          Have a printed recipe? Take a photo of it and our AI will automatically read the text and fill out the form below for you.
+        </p>
+        
+        <button 
+          type="button" 
+          className="zen-button" 
+          onClick={() => scanInputRef.current.click()}
+          disabled={isScanning}
+          style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+        >
+          {isScanning ? (
+            <><Sparkles size={18} className="spinning-icon" /> Reading your recipe...</>
+          ) : (
+            <><Camera size={18} /> Upload or Scan Recipe</>
+          )}
+        </button>
+        <input 
+          type="file" 
+          ref={scanInputRef} 
+          style={{ display: 'none' }} 
+          accept="image/*"
+          capture="environment"
+          onChange={handleScanUpload}
+        />
+      </div>
+
       <form onSubmit={handleSubmit} className="zen-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Title</label>
