@@ -33,7 +33,7 @@ export const aiService = {
     }
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
       const { mimeType, data } = parseDataUrl(imageData);
       
       const prompt = `You are a culinary AI assistant. Look at this photo of a printed or handwritten recipe.
