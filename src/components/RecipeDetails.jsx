@@ -124,56 +124,6 @@ export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
                     <span style={{ color: 'var(--color-ink-secondary)' }}>{ing.amount}</span>
                   </li>
                 ))}
-              </ul>
-
-              {(recipe.allergens?.contains || recipe.allergens?.mayContain || recipe.allergens?.doesNotContain || recipe.subAllergens?.mayContain || recipe.subAllergens?.doesNotContain) && (
-                <div>
-                  <h3 style={{ borderBottom: '1px solid var(--color-bamboo-light)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
-                    Information Tags
-                  </h3>
-                  
-                  {(recipe.allergens?.contains || recipe.allergens?.mayContain || recipe.allergens?.doesNotContain) && (
-                    <div style={{ marginBottom: '1.5rem' }}>
-                      <h4 style={{ marginBottom: '0.5rem', color: 'var(--color-ink-primary)' }}>Allergens</h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
-                        {recipe.allergens.contains && (
-                          <div style={{ backgroundColor: 'rgba(190,80,70,0.1)', color: '#be5046', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
-                            <strong>Contains:</strong> {recipe.allergens.contains}
-                          </div>
-                        )}
-                        {recipe.allergens.mayContain && (
-                          <div style={{ backgroundColor: 'rgba(210,153,34,0.1)', color: '#d29922', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
-                            <strong>May Contain:</strong> {recipe.allergens.mayContain}
-                          </div>
-                        )}
-                        {recipe.allergens.doesNotContain && (
-                          <div style={{ backgroundColor: 'rgba(126,141,105,0.1)', color: 'var(--color-matcha-accent)', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
-                            <strong>Does Not Contain:</strong> {recipe.allergens.doesNotContain}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {(recipe.subAllergens?.mayContain || recipe.subAllergens?.doesNotContain) && (
-                    <div>
-                      <h4 style={{ marginBottom: '0.5rem', color: 'var(--color-ink-primary)' }}>Sub Allergens</h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
-                        {recipe.subAllergens.mayContain && (
-                          <div style={{ backgroundColor: 'rgba(210,153,34,0.1)', color: '#d29922', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
-                            <strong>May Contain:</strong> {recipe.subAllergens.mayContain}
-                          </div>
-                        )}
-                        {recipe.subAllergens.doesNotContain && (
-                          <div style={{ backgroundColor: 'rgba(126,141,105,0.1)', color: 'var(--color-matcha-accent)', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
-                            <strong>Does Not Contain:</strong> {recipe.subAllergens.doesNotContain}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             <div>
@@ -185,6 +135,55 @@ export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
               </div>
             </div>
           </div>
+
+          {(recipe.allergens?.contains || recipe.allergens?.mayContain || recipe.allergens?.doesNotContain || recipe.subAllergens?.mayContain || recipe.subAllergens?.doesNotContain) && (
+            <div style={{ marginTop: '2rem' }}>
+              <h3 style={{ borderBottom: '1px solid var(--color-bamboo-light)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
+                Information Tags
+              </h3>
+              
+              {(recipe.allergens?.contains || recipe.allergens?.mayContain || recipe.allergens?.doesNotContain) && (
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <h4 style={{ marginBottom: '0.5rem', color: 'var(--color-ink-primary)' }}>Allergens</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    {recipe.allergens.contains && (
+                      <div style={{ backgroundColor: 'rgba(190,80,70,0.1)', color: '#be5046', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>Contains:</strong> {recipe.allergens.contains}
+                      </div>
+                    )}
+                    {recipe.allergens.mayContain && (
+                      <div style={{ backgroundColor: 'rgba(210,153,34,0.1)', color: '#d29922', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>May Contain:</strong> {recipe.allergens.mayContain}
+                      </div>
+                    )}
+                    {recipe.allergens.doesNotContain && (
+                      <div style={{ backgroundColor: 'rgba(126,141,105,0.1)', color: 'var(--color-matcha-accent)', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>Does Not Contain:</strong> {recipe.allergens.doesNotContain}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {(recipe.subAllergens?.mayContain || recipe.subAllergens?.doesNotContain) && (
+                <div>
+                  <h4 style={{ marginBottom: '0.5rem', color: 'var(--color-ink-primary)' }}>Sub Allergens</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    {recipe.subAllergens.mayContain && (
+                      <div style={{ backgroundColor: 'rgba(210,153,34,0.1)', color: '#d29922', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>May Contain:</strong> {recipe.subAllergens.mayContain}
+                      </div>
+                    )}
+                    {recipe.subAllergens.doesNotContain && (
+                      <div style={{ backgroundColor: 'rgba(126,141,105,0.1)', color: 'var(--color-matcha-accent)', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>Does Not Contain:</strong> {recipe.subAllergens.doesNotContain}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

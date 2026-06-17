@@ -227,55 +227,6 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '1.1rem', color: 'var(--color-matcha-accent)' }}>Information Tags</label>
-          <div style={{ marginBottom: '1rem', padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Allergens</label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <input 
-                type="text" 
-                className="zen-input" 
-                value={allergens.contains} 
-                onChange={(e) => setAllergens({...allergens, contains: e.target.value})} 
-                placeholder="Contains (e.g. Sulphur Dioxide)"
-              />
-              <input 
-                type="text" 
-                className="zen-input" 
-                value={allergens.mayContain} 
-                onChange={(e) => setAllergens({...allergens, mayContain: e.target.value})} 
-                placeholder="May Contain (e.g. Cereals, Mustard)"
-              />
-              <input 
-                type="text" 
-                className="zen-input" 
-                value={allergens.doesNotContain} 
-                onChange={(e) => setAllergens({...allergens, doesNotContain: e.target.value})} 
-                placeholder="Does Not Contain"
-              />
-            </div>
-          </div>
-          <div style={{ padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Sub Allergens</label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <input 
-                type="text" 
-                className="zen-input" 
-                value={subAllergens.mayContain} 
-                onChange={(e) => setSubAllergens({...subAllergens, mayContain: e.target.value})} 
-                placeholder="May Contain (e.g. Almonds, Barley)"
-              />
-              <input 
-                type="text" 
-                className="zen-input" 
-                value={subAllergens.doesNotContain} 
-                onChange={(e) => setSubAllergens({...subAllergens, doesNotContain: e.target.value})} 
-                placeholder="Does Not Contain"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '1.5rem' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Photos</label>
           <div 
             style={{ 
@@ -358,6 +309,55 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
             onChange={(e) => setInstructions(e.target.value)}
             placeholder="How to make this fusion wonder..."
           />
+        </div>
+
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '1.1rem', color: 'var(--color-matcha-accent)' }}>Information Tags</label>
+          <div style={{ marginBottom: '1rem', padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Allergens</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.contains} 
+                onChange={(e) => setAllergens({...allergens, contains: e.target.value})} 
+                placeholder="Contains (e.g. Sulphur Dioxide)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.mayContain} 
+                onChange={(e) => setAllergens({...allergens, mayContain: e.target.value})} 
+                placeholder="May Contain (e.g. Cereals, Mustard)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.doesNotContain} 
+                onChange={(e) => setAllergens({...allergens, doesNotContain: e.target.value})} 
+                placeholder="Does Not Contain"
+              />
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Sub Allergens</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={subAllergens.mayContain} 
+                onChange={(e) => setSubAllergens({...subAllergens, mayContain: e.target.value})} 
+                placeholder="May Contain (e.g. Almonds, Barley)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={subAllergens.doesNotContain} 
+                onChange={(e) => setSubAllergens({...subAllergens, doesNotContain: e.target.value})} 
+                placeholder="Does Not Contain"
+              />
+            </div>
+          </div>
         </div>
 
         <button type="submit" className="zen-button" disabled={isSubmitting} style={{ width: '100%' }}>
