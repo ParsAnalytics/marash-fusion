@@ -1,3 +1,5 @@
+import Tesseract from 'tesseract.js';
+
 const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const hasKey = Boolean(apiKey);
 
@@ -21,8 +23,29 @@ export const aiService = {
     }
 
     try {
-      const prompt = `You are a culinary AI assistant. Look at this photo of a printed or handwritten recipe.
-      Extract the recipe details and format the response STRICTLY as a JSON object with the following structure:
+      console.log("Starting Tesseract OCR...");
+      // Step 1: Use Tesseract.js to extract raw text from the image
+      const { data: { text: rawText } } = await Tesseract.recognize(
+        imageData,
+        'eng+tur', // Support English and Turkish
+        { logger: m => console.log(m) }
+      );
+      
+      console.log("OCR Extracted Text:", rawText);
+
+      if (!rawText || rawText.trim() === '') {
+        throw new Error("No text could be found in the image. Please make sure the text is clear.");
+      }
+
+      // Step 2: Use Groq (llama-3.3-70b-versatile) to structure the raw text into JSON
+      const prompt = `You are a culinary AI assistant. I have extracted the following raw text from a recipe photo using OCR.
+      
+      RAW TEXT:
+      """
+      ${rawText}
+      """
+      
+      Please format this recipe STRICTLY as a JSON object with the following structure:
       {
         "title": "Recipe Title",
         "ingredients": [
@@ -30,7 +53,7 @@ export const aiService = {
         ],
         "instructions": "Full instructions text. Keep newlines if there are multiple steps."
       }
-      If some parts are unreadable, try your best to guess or leave them empty. Do NOT include markdown blocks, just return the JSON.`;
+      If some parts are missing or messy, try your best to clean them up. Do NOT include markdown blocks, just return the JSON.`;
 
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -39,14 +62,11 @@ export const aiService = {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "llama-3.2-90b-vision-preview",
+          model: "llama-3.3-70b-versatile",
           messages: [
             {
               role: "user",
-              content: [
-                { type: "text", text: prompt },
-                { type: "image_url", image_url: { url: imageData } }
-              ]
+              content: prompt
             }
           ],
           temperature: 0.1
@@ -60,11 +80,11 @@ export const aiService = {
 
       const result = await response.json();
       const text = result.choices[0].message.content;
-      console.log("Groq Vision response text:", text);
+      console.log("Groq text parsing response:", text);
       
       return extractJSON(text);
     } catch (err) {
-      console.error("Groq Vision Recipe Extraction Error:", err);
+      console.error("Recipe Extraction Error:", err);
       if (err instanceof Error) {
         console.error("Error name:", err.name, "Message:", err.message, "Stack:", err.stack);
       }
