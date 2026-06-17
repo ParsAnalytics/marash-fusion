@@ -163,7 +163,6 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
           ref={scanInputRef} 
           style={{ display: 'none' }} 
           accept="image/*"
-          capture="environment"
           onChange={handleScanUpload}
         />
       </div>
