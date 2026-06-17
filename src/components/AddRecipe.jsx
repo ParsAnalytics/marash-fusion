@@ -28,8 +28,7 @@ export default function AddRecipe({ onRecipeAdded }) {
         }
         if (result.instructions) setInstructions(result.instructions);
         
-        // Save the scanned document as the first photo
-        setPhotos(prev => [reader.result, ...prev]);
+        // The scanned document is intentionally NOT added to the recipe photos.
       } catch (err) {
         console.error(err);
         alert(`Failed to read the recipe. Error: ${err.message || err}`);
