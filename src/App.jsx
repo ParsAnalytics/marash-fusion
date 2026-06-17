@@ -42,6 +42,11 @@ function App() {
     setCurrentView('details');
   };
 
+  const handleEditRecipe = (recipe) => {
+    setSelectedRecipe(recipe);
+    setCurrentView('edit');
+  };
+
   const handleRecipeAddedOrDeleted = () => {
     setCurrentView('gallery');
   };
@@ -91,6 +96,7 @@ function App() {
             recipe={selectedRecipe} 
             onBack={() => setCurrentView('gallery')} 
             onDelete={handleRecipeAddedOrDeleted}
+            onEdit={() => handleEditRecipe(selectedRecipe)}
           />
         )}
 
@@ -98,6 +104,13 @@ function App() {
           <div className="view-add">
             <h2 style={{ marginBottom: '2rem' }}>Create New Recipe</h2>
             <AddRecipe onRecipeAdded={handleRecipeAddedOrDeleted} />
+          </div>
+        )}
+
+        {currentView === 'edit' && selectedRecipe && (
+          <div className="view-add">
+            <h2 style={{ marginBottom: '2rem' }}>Edit Recipe</h2>
+            <AddRecipe onRecipeAdded={handleRecipeAddedOrDeleted} initialRecipe={selectedRecipe} />
           </div>
         )}
       </main>

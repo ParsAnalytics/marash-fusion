@@ -3,7 +3,7 @@ import { Plus, Trash2, Image as ImageIcon, ScanText, Sparkles, Camera } from 'lu
 import { recipeStore } from '../store/recipeStore';
 import { aiService } from '../services/aiService';
 
-export default function AddRecipe({ onRecipeAdded }) {
+export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
   const [title, setTitle] = useState('');
   const [recipeCode, setRecipeCode] = useState('');
   const [yieldAmount, setYieldAmount] = useState('');
@@ -15,6 +15,20 @@ export default function AddRecipe({ onRecipeAdded }) {
   const [photos, setPhotos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  
+  useEffect(() => {
+    if (initialRecipe) {
+      setTitle(initialRecipe.title || '');
+      setRecipeCode(initialRecipe.recipeCode || '');
+      setYieldAmount(initialRecipe.yieldAmount || '');
+      setTotalCost(initialRecipe.totalCost || '');
+      setPortionCost(initialRecipe.portionCost || '');
+      if (initialRecipe.allergens) setAllergens(initialRecipe.allergens);
+      if (initialRecipe.ingredients?.length > 0) setIngredients(initialRecipe.ingredients);
+      setInstructions(initialRecipe.instructions || '');
+      if (initialRecipe.photos?.length > 0) setPhotos(initialRecipe.photos);
+    }
+  }, [initialRecipe]);
   const fileInputRef = useRef(null);
   const scanInputRef = useRef(null);
 
@@ -102,7 +116,11 @@ export default function AddRecipe({ onRecipeAdded }) {
     };
 
     try {
-      await recipeStore.addRecipe(newRecipe);
+      if (initialRecipe) {
+        await recipeStore.updateRecipe(initialRecipe.id, newRecipe);
+      } else {
+        await recipeStore.addRecipe(newRecipe);
+      }
       if (onRecipeAdded) onRecipeAdded();
     } catch (err) {
       console.error(err);
@@ -316,7 +334,7 @@ export default function AddRecipe({ onRecipeAdded }) {
         </div>
 
         <button type="submit" className="zen-button" disabled={isSubmitting} style={{ width: '100%' }}>
-          {isSubmitting ? 'Saving...' : 'Save Recipe'}
+          {isSubmitting ? 'Saving...' : (initialRecipe ? 'Update Recipe' : 'Save Recipe')}
         </button>
       </form>
     </div>

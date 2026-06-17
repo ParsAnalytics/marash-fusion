@@ -44,5 +44,25 @@ export const recipeStore = {
       console.error('Error deleting recipe:', err);
       throw err;
     }
+  },
+
+  async updateRecipe(id, updatedData) {
+    try {
+      const recipes = await this.getRecipes();
+      const index = recipes.findIndex(r => r.id === id);
+      if (index === -1) throw new Error('Recipe not found');
+      
+      const updatedRecipe = {
+        ...recipes[index],
+        ...updatedData,
+        updatedAt: new Date().toISOString()
+      };
+      recipes[index] = updatedRecipe;
+      await localforage.setItem('recipes', recipes);
+      return updatedRecipe;
+    } catch (err) {
+      console.error('Error updating recipe:', err);
+      throw err;
+    }
   }
 };

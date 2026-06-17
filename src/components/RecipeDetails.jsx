@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Trash2, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
 import { recipeStore } from '../store/recipeStore';
 
-export default function RecipeDetails({ recipe, onBack, onDelete }) {
+export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   if (!recipe) return null;
@@ -94,13 +94,22 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
                 {recipe.portionCost && <span><strong>Portion Cost:</strong> {recipe.portionCost}</span>}
               </div>
             </div>
-            <button 
-              onClick={handleDelete}
-              style={{ color: 'var(--color-danger)', padding: '0.5rem' }}
-              title="Delete Recipe"
-            >
-              <Trash2 size={24} />
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button 
+                onClick={onEdit}
+                style={{ color: 'var(--color-matcha-accent)', padding: '0.5rem' }}
+                title="Edit Recipe"
+              >
+                <Edit3 size={24} />
+              </button>
+              <button 
+                onClick={handleDelete}
+                style={{ color: 'var(--color-danger)', padding: '0.5rem' }}
+                title="Delete Recipe"
+              >
+                <Trash2 size={24} />
+              </button>
+            </div>
           </div>
 
           <div className="recipe-details-grid">
