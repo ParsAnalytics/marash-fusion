@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Plus, Trash2, Image as ImageIcon, ScanText, Sparkles, Camera } from 'lucide-react';
 import { recipeStore } from '../store/recipeStore';
 import { aiService } from '../services/aiService';
+import ImageCropper from './ImageCropper';
 
 export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
   const [title, setTitle] = useState('');
@@ -14,6 +15,7 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
   const [instructions, setInstructions] = useState('');
   const [photos, setPhotos] = useState([]);
+  const [pendingCrops, setPendingCrops] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   
@@ -91,13 +93,20 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotos(prev => [...prev, reader.result]);
-      };
-      reader.readAsDataURL(file);
-    });
+    const fileUrls = files.map(file => URL.createObjectURL(file));
+    setPendingCrops(prev => [...prev, ...fileUrls]);
+    
+    // Reset the input so the same file can be selected again if needed
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleCropComplete = (croppedImageBase64) => {
+    setPhotos(prev => [...prev, croppedImageBase64]);
+    setPendingCrops(prev => prev.slice(1));
+  };
+
+  const handleCropCancel = () => {
+    setPendingCrops(prev => prev.slice(1));
   };
 
   const handleSubmit = async (e) => {
@@ -137,6 +146,14 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
 
   return (
     <div>
+      {pendingCrops.length > 0 && (
+        <ImageCropper 
+          imageSrc={pendingCrops[0]} 
+          onCropComplete={handleCropComplete} 
+          onCancel={handleCropCancel} 
+        />
+      )}
+      
       <div className="zen-card" style={{ maxWidth: '800px', margin: '0 auto 2rem', backgroundColor: 'rgba(126, 141, 105, 0.05)', border: '1px solid var(--color-matcha-accent)' }}>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-matcha-accent)', marginBottom: '0.5rem' }}>
           <ScanText size={20} /> Auto-Fill from Photo
