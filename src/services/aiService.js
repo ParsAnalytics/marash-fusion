@@ -1,17 +1,5 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const apiKey = import.meta.env.VITE_GROQ_API_KEY;
 const hasKey = Boolean(apiKey);
-const genAI = hasKey ? new GoogleGenerativeAI(apiKey) : null;
-
-function parseDataUrl(dataUrl) {
-  const commaIndex = dataUrl.indexOf(',');
-  const prefix = dataUrl.substring(0, commaIndex);
-  const data = dataUrl.substring(commaIndex + 1);
-  const mimeMatch = prefix.match(/:(.*?);/);
-  const mimeType = mimeMatch ? mimeMatch[1] : 'image/jpeg';
-  return { mimeType, data };
-}
 
 function extractJSON(text) {
   try {
@@ -29,13 +17,10 @@ function extractJSON(text) {
 export const aiService = {
   async extractRecipeFromImage(imageData) {
     if (!hasKey) {
-      throw new Error("Gemini API key is missing. Cannot use AI features.");
+      throw new Error("Groq API key is missing. Please add VITE_GROQ_API_KEY.");
     }
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-      const { mimeType, data } = parseDataUrl(imageData);
-      
       const prompt = `You are a culinary AI assistant. Look at this photo of a printed or handwritten recipe.
       Extract the recipe details and format the response STRICTLY as a JSON object with the following structure:
       {
@@ -47,15 +32,39 @@ export const aiService = {
       }
       If some parts are unreadable, try your best to guess or leave them empty. Do NOT include markdown blocks, just return the JSON.`;
 
-      const imageParts = [{ inlineData: { data, mimeType } }];
-      const result = await model.generateContent([prompt, ...imageParts]);
-      const response = await result.response;
-      const text = response.text();
-      console.log("Gemini Vision response text:", text);
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.2-11b-vision-preview",
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: prompt },
+                { type: "image_url", image_url: { url: imageData } }
+              ]
+            }
+          ],
+          temperature: 0.1
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Groq API Error: ${errorData.error?.message || response.statusText}`);
+      }
+
+      const result = await response.json();
+      const text = result.choices[0].message.content;
+      console.log("Groq Vision response text:", text);
       
       return extractJSON(text);
     } catch (err) {
-      console.error("Gemini Vision Recipe Extraction Error:", err);
+      console.error("Groq Vision Recipe Extraction Error:", err);
       if (err instanceof Error) {
         console.error("Error name:", err.name, "Message:", err.message, "Stack:", err.stack);
       }
