@@ -12,7 +12,29 @@ function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
-    setDataLoaded(true);
+    const purgeMocks = async () => {
+      try {
+        const recipes = await import('./store/recipeStore').then(m => m.recipeStore.getRecipes());
+        const mockTitles = [
+          "Matcha Tiramisu Fusion", 
+          "Miso Glazed Eggplant Tacos", 
+          "Turkish Delight Cheesecake", 
+          "Spicy Gochujang Carbonara"
+        ];
+        
+        const { recipeStore } = await import('./store/recipeStore');
+        for (const r of recipes) {
+          if (mockTitles.includes(r.title)) {
+            await recipeStore.deleteRecipe(r.id);
+          }
+        }
+      } catch (err) {
+        console.error("Purge error", err);
+      } finally {
+        setDataLoaded(true);
+      }
+    };
+    purgeMocks();
   }, []);
 
   const handleViewRecipe = (recipe) => {
