@@ -57,10 +57,16 @@ export const aiService = {
           { "name": "Ingredient Description", "amount": "Quantity/Amount (e.g., 300g)" }
         ],
         "method": "Full instructions text for the Method section. Keep newlines if there are multiple steps.",
-        "allergens": {
-          "contains": "List of allergens it contains, e.g. Sulphur Dioxide",
-          "mayContain": "List of allergens it may contain, e.g. Cereals, Mustard",
-          "doesNotContain": "List of allergens it does not contain"
+        "informationTags": {
+          "allergens": {
+            "contains": "List of allergens it contains",
+            "mayContain": "List of allergens it may contain",
+            "doesNotContain": "List of allergens it does not contain"
+          },
+          "subAllergens": {
+            "mayContain": "List of sub-allergens it may contain",
+            "doesNotContain": "List of sub-allergens it does not contain"
+          }
         }
       }
       If some parts are missing or messy, try your best to clean them up. Leave fields empty if not found. Do NOT include markdown blocks, just return the JSON.`;

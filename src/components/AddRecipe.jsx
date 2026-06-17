@@ -10,6 +10,7 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
   const [totalCost, setTotalCost] = useState('');
   const [portionCost, setPortionCost] = useState('');
   const [allergens, setAllergens] = useState({ contains: '', mayContain: '', doesNotContain: '' });
+  const [subAllergens, setSubAllergens] = useState({ mayContain: '', doesNotContain: '' });
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
   const [instructions, setInstructions] = useState('');
   const [photos, setPhotos] = useState([]);
@@ -24,6 +25,7 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
       setTotalCost(initialRecipe.totalCost || '');
       setPortionCost(initialRecipe.portionCost || '');
       if (initialRecipe.allergens) setAllergens(initialRecipe.allergens);
+      if (initialRecipe.subAllergens) setSubAllergens(initialRecipe.subAllergens);
       if (initialRecipe.ingredients?.length > 0) setIngredients(initialRecipe.ingredients);
       setInstructions(initialRecipe.instructions || '');
       if (initialRecipe.photos?.length > 0) setPhotos(initialRecipe.photos);
@@ -46,11 +48,13 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
         if (result.yield) setYieldAmount(result.yield);
         if (result.totalCost) setTotalCost(result.totalCost);
         if (result.portionCost) setPortionCost(result.portionCost);
-        if (result.allergens) setAllergens({
-          contains: result.allergens.contains || '',
-          mayContain: result.allergens.mayContain || '',
-          doesNotContain: result.allergens.doesNotContain || ''
-        });
+        if (result.informationTags) {
+          if (result.informationTags.allergens) setAllergens(result.informationTags.allergens);
+          if (result.informationTags.subAllergens) setSubAllergens(result.informationTags.subAllergens);
+        } else if (result.allergens) {
+          // backwards compatibility
+          setAllergens(result.allergens);
+        }
         if (result.ingredients && result.ingredients.length > 0) {
           setIngredients(result.ingredients);
         }
@@ -110,6 +114,7 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
       totalCost,
       portionCost,
       allergens,
+      subAllergens,
       ingredients: validIngredients,
       instructions,
       photos
@@ -222,29 +227,51 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Allergens (Information Tags)</label>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <input 
-              type="text" 
-              className="zen-input" 
-              value={allergens.contains} 
-              onChange={(e) => setAllergens({...allergens, contains: e.target.value})} 
-              placeholder="Contains (e.g. Sulphur Dioxide)"
-            />
-            <input 
-              type="text" 
-              className="zen-input" 
-              value={allergens.mayContain} 
-              onChange={(e) => setAllergens({...allergens, mayContain: e.target.value})} 
-              placeholder="May Contain (e.g. Cereals, Mustard)"
-            />
-            <input 
-              type="text" 
-              className="zen-input" 
-              value={allergens.doesNotContain} 
-              onChange={(e) => setAllergens({...allergens, doesNotContain: e.target.value})} 
-              placeholder="Does Not Contain"
-            />
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600, fontSize: '1.1rem', color: 'var(--color-matcha-accent)' }}>Information Tags</label>
+          <div style={{ marginBottom: '1rem', padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Allergens</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.contains} 
+                onChange={(e) => setAllergens({...allergens, contains: e.target.value})} 
+                placeholder="Contains (e.g. Sulphur Dioxide)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.mayContain} 
+                onChange={(e) => setAllergens({...allergens, mayContain: e.target.value})} 
+                placeholder="May Contain (e.g. Cereals, Mustard)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={allergens.doesNotContain} 
+                onChange={(e) => setAllergens({...allergens, doesNotContain: e.target.value})} 
+                placeholder="Does Not Contain"
+              />
+            </div>
+          </div>
+          <div style={{ padding: '1.5rem', backgroundColor: 'var(--color-washi-bg)', borderRadius: 'var(--radius-soft)' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Sub Allergens</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={subAllergens.mayContain} 
+                onChange={(e) => setSubAllergens({...subAllergens, mayContain: e.target.value})} 
+                placeholder="May Contain (e.g. Almonds, Barley)"
+              />
+              <input 
+                type="text" 
+                className="zen-input" 
+                value={subAllergens.doesNotContain} 
+                onChange={(e) => setSubAllergens({...subAllergens, doesNotContain: e.target.value})} 
+                placeholder="Does Not Contain"
+              />
+            </div>
           </div>
         </div>
 
@@ -323,7 +350,7 @@ export default function AddRecipe({ onRecipeAdded, initialRecipe }) {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Method / Instructions</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Method</label>
           <textarea 
             className="zen-input" 
             rows={5}
