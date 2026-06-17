@@ -124,6 +124,7 @@ export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
                     <span style={{ color: 'var(--color-ink-secondary)' }}>{ing.amount}</span>
                   </li>
                 ))}
+              </ul>
             </div>
 
             <div>
