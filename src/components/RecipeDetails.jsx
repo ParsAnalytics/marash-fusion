@@ -85,7 +85,15 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
         
         <div className="recipe-details-content">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <h1 style={{ fontSize: '2.5rem', margin: '0 0 2rem 0' }}>{recipe.title}</h1>
+            <div>
+              {recipe.recipeCode && <span style={{ backgroundColor: 'var(--color-washi-bg)', padding: '0.25rem 0.75rem', borderRadius: '1rem', fontSize: '0.85rem', color: 'var(--color-ink-secondary)', fontWeight: 'bold' }}>{recipe.recipeCode}</span>}
+              <h1 style={{ fontSize: '2.5rem', margin: '0.5rem 0 1rem 0' }}>{recipe.title}</h1>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem', color: 'var(--color-ink-secondary)' }}>
+                {recipe.yieldAmount && <span><strong>Yield:</strong> {recipe.yieldAmount}</span>}
+                {recipe.totalCost && <span><strong>Total Cost:</strong> {recipe.totalCost}</span>}
+                {recipe.portionCost && <span><strong>Portion Cost:</strong> {recipe.portionCost}</span>}
+              </div>
+            </div>
             <button 
               onClick={handleDelete}
               style={{ color: 'var(--color-danger)', padding: '0.5rem' }}
@@ -100,7 +108,7 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
               <h3 style={{ borderBottom: '1px solid var(--color-bamboo-light)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
                 Ingredients
               </h3>
-              <ul style={{ listStyle: 'none', padding: 0 }}>
+              <ul style={{ listStyle: 'none', padding: 0, marginBottom: '2rem' }}>
                 {recipe.ingredients.map((ing, idx) => (
                   <li key={idx} style={{ padding: '0.5rem 0', borderBottom: '1px dashed var(--color-washi-bg)', display: 'flex', justifyContent: 'space-between' }}>
                     <span>{ing.name}</span>
@@ -108,6 +116,31 @@ export default function RecipeDetails({ recipe, onBack, onDelete }) {
                   </li>
                 ))}
               </ul>
+
+              {(recipe.allergens?.contains || recipe.allergens?.mayContain || recipe.allergens?.doesNotContain) && (
+                <div>
+                  <h3 style={{ borderBottom: '1px solid var(--color-bamboo-light)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
+                    Allergens
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem' }}>
+                    {recipe.allergens.contains && (
+                      <div style={{ backgroundColor: 'rgba(190,80,70,0.1)', color: '#be5046', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>Contains:</strong> {recipe.allergens.contains}
+                      </div>
+                    )}
+                    {recipe.allergens.mayContain && (
+                      <div style={{ backgroundColor: 'rgba(210,153,34,0.1)', color: '#d29922', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>May Contain:</strong> {recipe.allergens.mayContain}
+                      </div>
+                    )}
+                    {recipe.allergens.doesNotContain && (
+                      <div style={{ backgroundColor: 'rgba(126,141,105,0.1)', color: 'var(--color-matcha-accent)', padding: '0.75rem', borderRadius: 'var(--radius-soft)' }}>
+                        <strong>Does Not Contain:</strong> {recipe.allergens.doesNotContain}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

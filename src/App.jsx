@@ -3,7 +3,7 @@ import { ChefHat, PlusCircle } from 'lucide-react';
 import Gallery from './components/Gallery';
 import AddRecipe from './components/AddRecipe';
 import RecipeDetails from './components/RecipeDetails';
-import { loadMockData } from './utils/mockData';
+// Mock data import removed
 import './App.css';
 
 function App() {
@@ -12,11 +12,7 @@ function App() {
   const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
-    const initData = async () => {
-      await loadMockData();
-      setDataLoaded(true);
-    };
-    initData();
+    setDataLoaded(true);
   }, []);
 
   const handleViewRecipe = (recipe) => {

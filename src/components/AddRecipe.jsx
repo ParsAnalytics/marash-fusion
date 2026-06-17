@@ -5,6 +5,11 @@ import { aiService } from '../services/aiService';
 
 export default function AddRecipe({ onRecipeAdded }) {
   const [title, setTitle] = useState('');
+  const [recipeCode, setRecipeCode] = useState('');
+  const [yieldAmount, setYieldAmount] = useState('');
+  const [totalCost, setTotalCost] = useState('');
+  const [portionCost, setPortionCost] = useState('');
+  const [allergens, setAllergens] = useState({ contains: '', mayContain: '', doesNotContain: '' });
   const [ingredients, setIngredients] = useState([{ name: '', amount: '' }]);
   const [instructions, setInstructions] = useState('');
   const [photos, setPhotos] = useState([]);
@@ -23,10 +28,19 @@ export default function AddRecipe({ onRecipeAdded }) {
       try {
         const result = await aiService.extractRecipeFromImage(reader.result);
         if (result.title) setTitle(result.title);
+        if (result.recipeCode) setRecipeCode(result.recipeCode);
+        if (result.yield) setYieldAmount(result.yield);
+        if (result.totalCost) setTotalCost(result.totalCost);
+        if (result.portionCost) setPortionCost(result.portionCost);
+        if (result.allergens) setAllergens({
+          contains: result.allergens.contains || '',
+          mayContain: result.allergens.mayContain || '',
+          doesNotContain: result.allergens.doesNotContain || ''
+        });
         if (result.ingredients && result.ingredients.length > 0) {
           setIngredients(result.ingredients);
         }
-        if (result.instructions) setInstructions(result.instructions);
+        if (result.method || result.instructions) setInstructions(result.method || result.instructions);
         
         // The scanned document is intentionally NOT added to the recipe photos.
       } catch (err) {
@@ -76,7 +90,12 @@ export default function AddRecipe({ onRecipeAdded }) {
     const validIngredients = ingredients.filter(i => i.name.trim() !== '');
 
     const newRecipe = {
+      recipeCode,
       title,
+      yieldAmount,
+      totalCost,
+      portionCost,
+      allergens,
       ingredients: validIngredients,
       instructions,
       photos
@@ -127,16 +146,88 @@ export default function AddRecipe({ onRecipeAdded }) {
       </div>
 
       <form onSubmit={handleSubmit} className="zen-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Code</label>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={recipeCode} 
+              onChange={(e) => setRecipeCode(e.target.value)} 
+              placeholder="e.g. R08796"
+            />
+          </div>
+          <div style={{ flex: 2 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Title</label>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)} 
+              placeholder="e.g., MUGHLAI COCONUT CURRY"
+              required
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Yield (Portions)</label>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={yieldAmount} 
+              onChange={(e) => setYieldAmount(e.target.value)} 
+              placeholder="e.g. 20 Ptn"
+            />
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Total Cost</label>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={totalCost} 
+              onChange={(e) => setTotalCost(e.target.value)} 
+              placeholder="e.g. 24.12"
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Portion Cost</label>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={portionCost} 
+              onChange={(e) => setPortionCost(e.target.value)} 
+              placeholder="e.g. 1.21"
+            />
+          </div>
+        </div>
+
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Title</label>
-          <input 
-            type="text" 
-            className="zen-input" 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)} 
-            placeholder="e.g., Matcha Tiramisu Fusion"
-            required
-          />
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Allergens (Information Tags)</label>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={allergens.contains} 
+              onChange={(e) => setAllergens({...allergens, contains: e.target.value})} 
+              placeholder="Contains (e.g. Sulphur Dioxide)"
+            />
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={allergens.mayContain} 
+              onChange={(e) => setAllergens({...allergens, mayContain: e.target.value})} 
+              placeholder="May Contain (e.g. Cereals, Mustard)"
+            />
+            <input 
+              type="text" 
+              className="zen-input" 
+              value={allergens.doesNotContain} 
+              onChange={(e) => setAllergens({...allergens, doesNotContain: e.target.value})} 
+              placeholder="Does Not Contain"
+            />
+          </div>
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
@@ -214,7 +305,7 @@ export default function AddRecipe({ onRecipeAdded }) {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Instructions</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Method / Instructions</label>
           <textarea 
             className="zen-input" 
             rows={5}

@@ -38,7 +38,8 @@ export const aiService = {
       }
 
       // Step 2: Use Groq (llama-3.3-70b-versatile) to structure the raw text into JSON
-      const prompt = `You are a culinary AI assistant. I have extracted the following raw text from a recipe photo using OCR.
+      const prompt = `You are a culinary AI assistant processing a professional recipe sheet. 
+      I have extracted the following raw text from a recipe photo using OCR.
       
       RAW TEXT:
       """
@@ -47,13 +48,22 @@ export const aiService = {
       
       Please format this recipe STRICTLY as a JSON object with the following structure:
       {
-        "title": "Recipe Title",
+        "recipeCode": "Code like R08796, or empty string",
+        "title": "Recipe Title (e.g. MUGHLAI COCONUT VEGETABLE CURRY)",
+        "yield": "Portion size/yield (e.g. 20 Ptn)",
+        "totalCost": "Total cost (e.g. 24.12), or empty string",
+        "portionCost": "Portion cost (e.g. 1.21), or empty string",
         "ingredients": [
-          { "name": "Ingredient Name", "amount": "Quantity/Amount (e.g., 2 tbsp)" }
+          { "name": "Ingredient Description", "amount": "Quantity/Amount (e.g., 300g)" }
         ],
-        "instructions": "Full instructions text. Keep newlines if there are multiple steps."
+        "method": "Full instructions text for the Method section. Keep newlines if there are multiple steps.",
+        "allergens": {
+          "contains": "List of allergens it contains, e.g. Sulphur Dioxide",
+          "mayContain": "List of allergens it may contain, e.g. Cereals, Mustard",
+          "doesNotContain": "List of allergens it does not contain"
+        }
       }
-      If some parts are missing or messy, try your best to clean them up. Do NOT include markdown blocks, just return the JSON.`;
+      If some parts are missing or messy, try your best to clean them up. Leave fields empty if not found. Do NOT include markdown blocks, just return the JSON.`;
 
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
