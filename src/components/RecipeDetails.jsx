@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeft, Trash2, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
 import { recipeStore } from '../store/recipeStore';
+import { requireAuth } from '../utils/auth';
 
 export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -8,9 +9,11 @@ export default function RecipeDetails({ recipe, onBack, onDelete, onEdit }) {
   if (!recipe) return null;
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this recipe?')) {
-      await recipeStore.deleteRecipe(recipe.id);
-      if (onDelete) onDelete();
+    if (requireAuth()) {
+      if (window.confirm('Are you sure you want to delete this recipe?')) {
+        await recipeStore.deleteRecipe(recipe.id);
+        if (onDelete) onDelete();
+      }
     }
   };
 

@@ -3,6 +3,7 @@ import { ChefHat, PlusCircle } from 'lucide-react';
 import Gallery from './components/Gallery';
 import AddRecipe from './components/AddRecipe';
 import RecipeDetails from './components/RecipeDetails';
+import { requireAuth } from './utils/auth';
 // Mock data import removed
 import './App.css';
 
@@ -43,8 +44,10 @@ function App() {
   };
 
   const handleEditRecipe = (recipe) => {
-    setSelectedRecipe(recipe);
-    setCurrentView('edit');
+    if (requireAuth()) {
+      setSelectedRecipe(recipe);
+      setCurrentView('edit');
+    }
   };
 
   const handleRecipeAddedOrDeleted = () => {
@@ -73,7 +76,9 @@ function App() {
             </span>
             <button 
               className="zen-button"
-              onClick={() => setCurrentView('add')}
+              onClick={() => {
+                if (requireAuth()) setCurrentView('add');
+              }}
             >
               <PlusCircle size={18} />
               New Recipe
