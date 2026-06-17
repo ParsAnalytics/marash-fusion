@@ -51,10 +51,14 @@ export const aiService = {
       const result = await model.generateContent([prompt, ...imageParts]);
       const response = await result.response;
       const text = response.text();
+      console.log("Gemini Vision response text:", text);
       
       return extractJSON(text);
     } catch (err) {
       console.error("Gemini Vision Recipe Extraction Error:", err);
+      if (err instanceof Error) {
+        console.error("Error name:", err.name, "Message:", err.message, "Stack:", err.stack);
+      }
       throw err;
     }
   }

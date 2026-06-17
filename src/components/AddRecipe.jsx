@@ -32,7 +32,7 @@ export default function AddRecipe({ onRecipeAdded }) {
         setPhotos(prev => [reader.result, ...prev]);
       } catch (err) {
         console.error(err);
-        alert('Failed to read the recipe. Make sure the text is clear.');
+        alert(`Failed to read the recipe. Error: ${err.message || err}`);
       } finally {
         setIsScanning(false);
         // Reset input so they can scan another one if needed
