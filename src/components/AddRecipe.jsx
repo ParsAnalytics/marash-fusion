@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 import { recipeStore } from '../store/recipeStore';
-import { aiService } from '../services/aiService';
 
 export default function AddRecipe({ onRecipeAdded }) {
   const [title, setTitle] = useState('');
@@ -9,33 +8,7 @@ export default function AddRecipe({ onRecipeAdded }) {
   const [instructions, setInstructions] = useState('');
   const [photos, setPhotos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState([]);
-  const [isAiLoading, setIsAiLoading] = useState(false);
   const fileInputRef = useRef(null);
-
-  useEffect(() => {
-    const fetchSuggestions = async () => {
-      const validNames = ingredients.map(i => i.name.trim()).filter(n => n.length > 2);
-      if (validNames.length === 0) {
-        setAiSuggestions([]);
-        return;
-      }
-
-      setIsAiLoading(true);
-      try {
-        const suggestions = await aiService.suggestPairingsWithGemini(validNames);
-        setAiSuggestions(suggestions);
-      } catch (err) {
-        console.error("AI suggestion failed", err);
-      } finally {
-        setIsAiLoading(false);
-      }
-    };
-
-    const timer = setTimeout(fetchSuggestions, 800); // Debounce
-    return () => clearTimeout(timer);
-  }, [ingredients]);
-
   const handleIngredientChange = (index, field, value) => {
     const newIngredients = [...ingredients];
     newIngredients[index][field] = value;
@@ -90,8 +63,8 @@ export default function AddRecipe({ onRecipeAdded }) {
   };
 
   return (
-    <div className="add-recipe-grid">
-      <form onSubmit={handleSubmit} className="zen-card">
+    <div>
+      <form onSubmit={handleSubmit} className="zen-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Recipe Title</label>
           <input 
@@ -193,58 +166,6 @@ export default function AddRecipe({ onRecipeAdded }) {
           {isSubmitting ? 'Saving...' : 'Save Recipe'}
         </button>
       </form>
-
-      {/* AI Panel Placeholder */}
-      <div className="zen-card ai-panel" style={{ backgroundColor: 'rgba(126, 141, 105, 0.05)', border: '1px solid var(--color-bamboo-light)', height: 'fit-content', position: 'sticky', top: '100px' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-matcha-accent)' }}>
-          <Sparkles size={20} /> AI Chef Assistant
-        </h3>
-        <p style={{ fontSize: '0.9rem', color: 'var(--color-ink-secondary)' }}>
-          As you type ingredients, our Gemini AI will suggest fusion combinations based on your uploaded knowledge base.
-        </p>
-        
-        <div style={{ marginTop: '1.5rem' }}>
-          <h4 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-ink-secondary)', marginBottom: '1rem' }}>Suggested Pairings</h4>
-          
-          {isAiLoading ? (
-            <p style={{ fontSize: '0.9rem', fontStyle: 'italic', color: 'var(--color-ink-secondary)' }}>Thinking...</p>
-          ) : aiSuggestions.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {aiSuggestions.map((suggestion, idx) => (
-                <div 
-                  key={idx}
-                  style={{
-                    padding: '1rem',
-                    backgroundColor: 'white',
-                    border: '1px solid var(--color-bamboo)',
-                    borderRadius: 'var(--radius-soft)',
-                    transition: 'var(--transition-smooth)',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                    <strong style={{ color: 'var(--color-matcha-accent)', fontSize: '1rem' }}>{suggestion.ingredient}</strong>
-                    <button 
-                      onClick={() => setIngredients([...ingredients, { name: suggestion.ingredient, amount: '' }])}
-                      style={{ color: 'var(--color-matcha-hover)', display: 'flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.8rem', cursor: 'pointer' }}
-                      title="Add to ingredients"
-                    >
-                      <Plus size={14} /> Add
-                    </button>
-                  </div>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--color-ink-primary)', marginBottom: '0.5rem', lineHeight: '1.4' }}>
-                    {suggestion.reason}
-                  </p>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-ink-secondary)', fontStyle: 'italic', margin: 0 }}>
-                    <strong>Example:</strong> {suggestion.exampleRecipe}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p style={{ fontSize: '0.9rem', fontStyle: 'italic', color: 'var(--color-ink-secondary)' }}>Start typing ingredients to get ideas...</p>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

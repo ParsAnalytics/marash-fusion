@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ChefHat, BookOpen, PlusCircle } from 'lucide-react';
+import { ChefHat, PlusCircle } from 'lucide-react';
 import Gallery from './components/Gallery';
 import AddRecipe from './components/AddRecipe';
 import RecipeDetails from './components/RecipeDetails';
-import KnowledgeBase from './components/KnowledgeBase';
-import PantryScanner from './components/PantryScanner';
-import { Camera } from 'lucide-react';
 import { loadMockData } from './utils/mockData';
 import './App.css';
 
@@ -51,20 +48,6 @@ function App() {
             >
               Recipe Gallery
             </span>
-            <span 
-              className={`nav-link ${currentView === 'pantry' ? 'active' : ''}`}
-              onClick={() => setCurrentView('pantry')}
-            >
-              <Camera size={18} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }}/>
-              Pantry Scan
-            </span>
-            <span 
-              className={`nav-link ${currentView === 'knowledge' ? 'active' : ''}`}
-              onClick={() => setCurrentView('knowledge')}
-            >
-              <BookOpen size={18} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'text-bottom' }}/>
-              Knowledge Base
-            </span>
             <button 
               className="zen-button"
               onClick={() => setCurrentView('add')}
@@ -93,23 +76,10 @@ function App() {
           />
         )}
 
-        {currentView === 'pantry' && (
-          <div className="view-pantry">
-            <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Pantry & Counter Scan</h2>
-            <PantryScanner onRecipeAdded={handleRecipeAddedOrDeleted} />
-          </div>
-        )}
-
         {currentView === 'add' && (
           <div className="view-add">
             <h2 style={{ marginBottom: '2rem' }}>Create New Recipe</h2>
             <AddRecipe onRecipeAdded={handleRecipeAddedOrDeleted} />
-          </div>
-        )}
-
-        {currentView === 'knowledge' && (
-          <div className="view-knowledge">
-            <KnowledgeBase />
           </div>
         )}
       </main>
